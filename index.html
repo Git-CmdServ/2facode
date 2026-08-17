@@ -5,8 +5,514 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>2FA Authenticator</title>
 <style>
-:root{--bg:#f5f6f8;--card:#fff;--text:#121316;--muted:#8b9099;--line:#e8eaee;--soft:#f8f9fb;--orange:#f59e0b;--red:#ef4444;--shadow:0 24px 70px rgba(16,24,40,.08)}
-*{box-sizing:border-box}html,body{min-height:100%}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 18% 12%,rgba(0,0,0,.035),transparent 28%),radial-gradient(circle at 82% 85%,rgba(0,0,0,.025),transparent 25%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.shell{width:min(520px,100%)}.brand{display:flex;align-items:center;gap:12px;margin:0 0 16px 4px}.logo{width:42px;height:42px;border-radius:13px;background:#111;color:#fff;display:grid;place-items:center;box-shadow:0 8px 22px rgba(0,0,0,.12)}.logo svg{width:22px;height:22px}.brand-copy b{display:block;font-size:15px}.brand-copy span{font-size:12px;color:var(--muted)}.card{background:rgba(255,255,255,.96);border:1px solid rgba(227,230,235,.9);border-radius:26px;box-shadow:var(--shadow);overflow:hidden;backdrop-filter:blur(12px)}.top{padding:28px 28px 20px}h1{font-size:30px;line-height:1.05;letter-spacing:-.04em;margin:0 0 8px}.desc{margin:0;color:var(--muted);font-size:14px;line-height:1.55}.input-card{margin-top:22px;border:1px solid var(--line);border-radius:17px;background:var(--soft);padding:7px;display:flex;align-items:center;gap:6px}.input-card:focus-within{border-color:#c8ccd3;box-shadow:0 0 0 4px rgba(17,17,17,.04);background:#fff}.key-icon{width:38px;height:38px;display:grid;place-items:center;color:#777}.key-icon svg{width:19px;height:19px}input{min-width:0;flex:1;height:44px;border:0;outline:0;background:transparent;font:600 14px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#17181b}input::placeholder{color:#a9adb5}.icon-btn{width:40px;height:40px;border:0;border-radius:11px;background:transparent;color:#737780;display:grid;place-items:center;cursor:pointer}.icon-btn:hover{background:#eceef2;color:#111}.icon-btn svg{width:19px;height:19px;stroke:currentColor}.result-wrap{border-top:1px solid var(--line);padding:26px 28px 28px;background:linear-gradient(#fff,#fcfcfd)}.empty{min-height:178px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--muted)}.empty-icon{width:56px;height:56px;border:1px solid var(--line);border-radius:18px;display:grid;place-items:center;margin-bottom:13px;background:#fff}.empty-icon svg{width:25px;height:25px;stroke:#81858d}.empty strong{color:#4a4e55;font-size:14px;margin-bottom:4px}.empty span{font-size:12px}.result{display:none}.result.active{display:block}.empty.hidden{display:none}.code-row{display:flex;align-items:center;justify-content:space-between;gap:20px}.label{color:var(--muted);font-size:12px;font-weight:750;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}.code{font-size:clamp(38px,10vw,58px);font-weight:800;line-height:1;letter-spacing:.105em;font-variant-numeric:tabular-nums}.copy{width:54px;height:54px;border:1px solid var(--line);border-radius:16px;background:#fff;color:#111;display:grid;place-items:center;cursor:pointer;flex:0 0 auto}.copy svg{width:21px;height:21px;stroke:currentColor}.timer-line{display:flex;align-items:center;gap:14px;margin-top:24px}.ring{--p:100;--ring-color:#111;width:48px;height:48px;border-radius:50%;background:conic-gradient(var(--ring-color) calc(var(--p)*1%),#eceef2 0);display:grid;place-items:center;position:relative;flex:0 0 auto}.ring:after{content:"";width:38px;height:38px;border-radius:50%;background:#fff;position:absolute}.ring span{position:relative;z-index:1;font-size:12px;font-weight:800}.timer-copy{flex:1}.timer-title{font-size:13px;font-weight:700;margin-bottom:4px}.timer-sub{font-size:12px;color:var(--muted)}.progress{height:6px;background:#eceef2;border-radius:999px;overflow:hidden;margin-top:12px}.progress>i{display:block;height:100%;width:100%;border-radius:inherit;background:#111}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.pill{padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;color:#6f747d;font-size:11px;font-weight:700}.status{min-height:20px;margin-top:14px;font-size:12px;color:var(--muted)}.status.error{color:var(--red)}.footer{display:flex;align-items:center;gap:8px;padding:15px 20px;border-top:1px solid var(--line);color:#8a8f97;font-size:11px;background:#fafbfc}.footer svg{width:15px;height:15px;stroke:currentColor}.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,16px);background:#151619;color:#fff;padding:10px 14px;border-radius:12px;font-size:12px;font-weight:700;opacity:0;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}@media(max-width:520px){body{padding:14px}.top,.result-wrap{padding-left:20px;padding-right:20px}.card{border-radius:22px}}
-</style></head><body><div class="shell"><div class="brand"><div class="logo" aria-hidden="true">🔐</div><div class="brand-copy"><b>2FA Authenticator</b><span>Локальный TOTP-генератор</span></div></div><main class="card"><section class="top"><h1>Одноразовый код</h1><p class="desc">Вставь секрет Base32 или ссылку <b>otpauth://</b>. Данные остаются только на этом устройстве.</p><div class="input-card"><div class="key-icon">🔑</div><input id="secret" type="password" autocomplete="off" spellcheck="false" placeholder="JBSWY3DPEHPK3PXP"><button class="icon-btn" id="pasteBtn" type="button" title="Вставить">📋</button><button class="icon-btn" id="toggleBtn" type="button" title="Показать ключ">👁</button></div><div class="status" id="status"></div></section><section class="result-wrap"><div class="empty" id="emptyState"><div class="empty-icon">◌</div><strong>Код появится здесь</strong><span>Таймер запускается только после ввода ключа</span></div><div class="result" id="result"><div class="code-row"><div><div class="label">Текущий код</div><div class="code" id="code"></div></div><button class="copy" id="copyBtn" type="button" title="Скопировать код">⧉</button></div><div class="timer-line"><div class="ring" id="ring"><span id="seconds"></span></div><div class="timer-copy"><div class="timer-title" id="timerTitle"></div><div class="timer-sub" id="timerSub"></div><div class="progress"><i id="bar"></i></div></div></div><div class="meta"><span class="pill" id="periodPill"></span><span class="pill" id="digitsPill"></span><span class="pill" id="algoPill"></span></div></div></section><div class="footer">🛡 Секрет не отправляется на сервер и не сохраняется автоматически</div></main></div><div class="toast" id="toast">Код скопирован</div><script>
-(()=>{const $=id=>document.getElementById(id),secretInput=$('secret'),emptyState=$('emptyState'),result=$('result'),codeEl=$('code'),ring=$('ring'),secondsEl=$('seconds'),timerTitle=$('timerTitle'),timerSub=$('timerSub'),bar=$('bar'),status=$('status'),copyBtn=$('copyBtn'),pasteBtn=$('pasteBtn'),toggleBtn=$('toggleBtn'),toast=$('toast');let config=null,currentCode='',lastCounter=null,tick=null;const defaults={period:30,digits:6,algorithm:'SHA1'};function setStatus(t='',e=false){status.textContent=t;status.classList.toggle('error',e)}function cleanBase32(s){return s.replace(/\s+/g,'').replace(/-/g,'').replace(/=+$/g,'').toUpperCase()}function parseInput(raw){raw=raw.trim();if(!raw)return null;let cfg={...defaults,secret:''};if(raw.toLowerCase().startsWith('otpauth://')){let u;try{u=new URL(raw)}catch{throw new Error('Некорректная otpauth-ссылка')}const secret=u.searchParams.get('secret');if(!secret)throw new Error('В ссылке нет параметра secret');cfg.secret=cleanBase32(secret);const period=Number(u.searchParams.get('period')),digits=Number(u.searchParams.get('digits')),algorithm=(u.searchParams.get('algorithm')||'SHA1').toUpperCase().replace(/-/g,'');if(Number.isFinite(period)&&period>=5&&period<=300)cfg.period=Math.floor(period);if([6,7,8].includes(digits))cfg.digits=digits;if(['SHA1','SHA256','SHA512'].includes(algorithm))cfg.algorithm=algorithm}else cfg.secret=cleanBase32(raw);if(!cfg.secret)throw new Error('Введите секретный ключ');if(!/^[A-Z2-7]+$/.test(cfg.secret))throw new Error('Ключ должен быть в формате Base32');return cfg}function base32ToBytes(b){const a='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';let bits='';for(const ch of b){const v=a.indexOf(ch);if(v<0)throw new Error('Некорректный Base32-ключ');bits+=v.toString(2).padStart(5,'0')}const out=[];for(let i=0;i+8<=bits.length;i+=8)out.push(parseInt(bits.slice(i,i+8),2));if(!out.length)throw new Error('Слишком короткий ключ');return new Uint8Array(out)}function counterBytes(c){const b=new ArrayBuffer(8),v=new DataView(b);v.setUint32(0,Math.floor(c/0x100000000),false);v.setUint32(4,c>>>0,false);return new Uint8Array(b)}async function totp(cfg,c){const h={SHA1:'SHA-1',SHA256:'SHA-256',SHA512:'SHA-512'}[cfg.algorithm],key=await crypto.subtle.importKey('raw',base32ToBytes(cfg.secret),{name:'HMAC',hash:h},false,['sign']),sig=new Uint8Array(await crypto.subtle.sign('HMAC',key,counterBytes(c))),o=sig[sig.length-1]&15,bin=((sig[o]&127)<<24)|((sig[o+1]&255)<<16)|((sig[o+2]&255)<<8)|(sig[o+3]&255);return String((bin>>>0)%(10**cfg.digits)).padStart(cfg.digits,'0')}function resetView(){clearInterval(tick);tick=null;config=null;currentCode='';lastCounter=null;result.classList.remove('active');emptyState.classList.remove('hidden');setStatus()}async function updateCode(force=false){if(!config)return;const now=Math.floor(Date.now()/1000),counter=Math.floor(now/config.period),remaining=config.period-now%config.period;if(force||counter!==lastCounter){currentCode=await totp(config,counter);codeEl.textContent=currentCode;lastCounter=counter}const pct=remaining/config.period*100,c=remaining<=5?'#ef4444':remaining<=10?'#f59e0b':'#111111';codeEl.style.color=c;ring.style.setProperty('--ring-color',c);ring.style.setProperty('--p',pct);secondsEl.textContent=remaining;bar.style.width=pct+'%';bar.style.background=c;timerTitle.textContent=remaining<=5?'Скоро обновится':remaining<=10?'Мало времени':'Код активен';timerSub.textContent='До обновления осталось '+remaining+' сек.'}async function activate(){clearInterval(tick);const raw=secretInput.value.trim();if(!raw){resetView();return}try{config=parseInput(raw);$('periodPill').textContent=config.period+' сек';$('digitsPill').textContent=config.digits+' цифр';$('algoPill').textContent=config.algorithm.replace('SHA','SHA-');emptyState.classList.add('hidden');result.classList.add('active');lastCounter=null;await updateCode(true);tick=setInterval(()=>updateCode().catch(()=>{}),250)}catch(e){resetView();setStatus(e.message||'Не удалось создать код',true)}}secretInput.addEventListener('input',activate);pasteBtn.addEventListener('click',async()=>{try{secretInput.value=await navigator.clipboard.readText();await activate()}catch{setStatus('Браузер не разрешил чтение буфера обмена',true)}});toggleBtn.addEventListener('click',()=>secretInput.type=secretInput.type==='password'?'text':'password');copyBtn.addEventListener('click',async()=>{if(!currentCode)return;try{await navigator.clipboard.writeText(currentCode);toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1400)}catch{}});resetView()})();
-</script></body></html>
+:root{
+  --bg:#f5f6f8;
+  --card:#fff;
+  --text:#121316;
+  --muted:#8b9099;
+  --line:#e8eaee;
+  --soft:#f8f9fb;
+  --orange:#f59e0b;
+  --red:#ef4444;
+  --shadow:0 24px 70px rgba(16,24,40,.08);
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{
+  margin:0;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:24px;
+  background:
+    radial-gradient(circle at 18% 12%,rgba(0,0,0,.035),transparent 28%),
+    radial-gradient(circle at 82% 85%,rgba(0,0,0,.025),transparent 25%),
+    var(--bg);
+  color:var(--text);
+  font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
+}
+.shell{width:min(520px,100%)}
+.brand{
+  display:flex;align-items:center;gap:12px;margin:0 0 16px 4px
+}
+.logo{
+  width:42px;height:42px;border-radius:13px;background:#111;color:#fff;
+  display:grid;place-items:center;box-shadow:0 8px 22px rgba(0,0,0,.12)
+}
+.logo svg{width:22px;height:22px}
+.brand-copy b{display:block;font-size:15px;letter-spacing:-.01em}
+.brand-copy span{font-size:12px;color:var(--muted)}
+.card{
+  background:rgba(255,255,255,.96);
+  border:1px solid rgba(227,230,235,.9);
+  border-radius:26px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  backdrop-filter:blur(12px)
+}
+.top{padding:28px 28px 20px}
+h1{font-size:30px;line-height:1.05;letter-spacing:-.04em;margin:0 0 8px}
+.desc{margin:0;color:var(--muted);font-size:14px;line-height:1.55}
+.input-card{
+  margin-top:22px;
+  border:1px solid var(--line);
+  border-radius:17px;
+  background:var(--soft);
+  padding:7px;
+  display:flex;align-items:center;gap:6px;
+  transition:.2s ease
+}
+.input-card:focus-within{border-color:#c8ccd3;box-shadow:0 0 0 4px rgba(17,17,17,.04);background:#fff}
+.key-icon{width:38px;height:38px;display:grid;place-items:center;color:#777}
+.key-icon svg{width:19px;height:19px}
+input{
+  min-width:0;flex:1;height:44px;border:0;outline:0;background:transparent;
+  font:600 14px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color:#17181b;letter-spacing:.02em
+}
+input::placeholder{color:#a9adb5;font-weight:500;letter-spacing:0}
+.icon-btn{
+  width:40px;height:40px;border:0;border-radius:11px;background:transparent;color:#737780;
+  display:grid;place-items:center;cursor:pointer;transition:.16s ease
+}
+.icon-btn:hover{background:#eceef2;color:#111}
+.icon-btn svg{width:19px;height:19px;stroke:currentColor}
+.result-wrap{
+  border-top:1px solid var(--line);
+  padding:26px 28px 28px;
+  background:linear-gradient(#fff,#fcfcfd)
+}
+.empty{
+  min-height:178px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;color:var(--muted)
+}
+.empty-icon{
+  width:56px;height:56px;border:1px solid var(--line);border-radius:18px;
+  display:grid;place-items:center;margin-bottom:13px;background:#fff
+}
+.empty-icon svg{width:25px;height:25px;stroke:#81858d}
+.empty strong{color:#4a4e55;font-size:14px;margin-bottom:4px}
+.empty span{font-size:12px}
+.result{display:none}
+.result.active{display:block}
+.empty.hidden{display:none}
+.code-row{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.code-info{min-width:0}
+.label{
+  color:var(--muted);font-size:12px;font-weight:750;text-transform:uppercase;
+  letter-spacing:.08em;margin-bottom:8px
+}
+.code{
+  font-size:clamp(38px,10vw,58px);
+  font-weight:800;
+  line-height:1;
+  letter-spacing:.105em;
+  font-variant-numeric:tabular-nums;
+  transition:color .2s ease
+}
+.copy{
+  width:54px;height:54px;border:1px solid var(--line);border-radius:16px;background:#fff;
+  color:#111;display:grid;place-items:center;cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.04);transition:.16s ease;flex:0 0 auto
+}
+.copy:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(0,0,0,.07)}
+.copy:active{transform:scale(.97)}
+.copy svg{width:21px;height:21px;stroke:currentColor}
+.timer-line{display:flex;align-items:center;gap:14px;margin-top:24px}
+.ring{
+  --p:100;
+  --ring-color:#111;
+  width:48px;height:48px;border-radius:50%;
+  background:conic-gradient(var(--ring-color) calc(var(--p)*1%),#eceef2 0);
+  display:grid;place-items:center;position:relative;flex:0 0 auto
+}
+.ring:after{
+  content:"";width:38px;height:38px;border-radius:50%;background:#fff;position:absolute
+}
+.ring span{position:relative;z-index:1;font-size:12px;font-weight:800;font-variant-numeric:tabular-nums}
+.timer-copy{flex:1;min-width:0}
+.timer-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.timer-sub{font-size:12px;color:var(--muted)}
+.progress{height:6px;background:#eceef2;border-radius:999px;overflow:hidden;margin-top:12px}
+.progress>i{display:block;height:100%;width:100%;border-radius:inherit;background:#111;transition:width .15s linear,background .2s ease}
+.meta{
+  display:flex;gap:8px;flex-wrap:wrap;margin-top:18px
+}
+.pill{
+  padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;
+  color:#6f747d;font-size:11px;font-weight:700
+}
+.status{min-height:20px;margin-top:14px;font-size:12px;color:var(--muted)}
+.status.error{color:var(--red)}
+.footer{
+  display:flex;align-items:center;gap:8px;padding:15px 20px;border-top:1px solid var(--line);
+  color:#8a8f97;font-size:11px;background:#fafbfc
+}
+.footer svg{width:15px;height:15px;stroke:currentColor;flex:0 0 auto}
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,16px);
+  background:#151619;color:#fff;padding:10px 14px;border-radius:12px;
+  font-size:12px;font-weight:700;opacity:0;pointer-events:none;
+  transition:.2s ease;box-shadow:0 10px 30px rgba(0,0,0,.18)
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:520px){
+  body{padding:14px}
+  .top,.result-wrap{padding-left:20px;padding-right:20px}
+  .card{border-radius:22px}
+  .code-row{gap:10px}
+  .copy{width:48px;height:48px}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="brand">
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="5" y="10" width="14" height="10" rx="3"></rect>
+        <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+        <path d="M12 14v2.5"></path>
+      </svg>
+    </div>
+    <div class="brand-copy"><b>2FA Authenticator</b><span>Локальный TOTP-генератор</span></div>
+  </div>
+
+  <main class="card">
+    <section class="top">
+      <h1>Одноразовый код</h1>
+      <p class="desc">Вставь секрет Base32 или ссылку <b>otpauth://</b>. Данные остаются только на этом устройстве.</p>
+
+      <div class="input-card">
+        <div class="key-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="15" r="4"></circle>
+            <path d="m11 12 7-7 2 2-2 2 2 2-2 2-2-2-3 3"></path>
+          </svg>
+        </div>
+
+        <input id="secret" type="password" autocomplete="off" spellcheck="false" placeholder="JBSWY3DPEHPK3PXP">
+
+        <button class="icon-btn" id="pasteBtn" type="button" title="Вставить">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="8" y="4" width="10" height="16" rx="2"></rect>
+            <path d="M8 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h7"></path>
+            <path d="M10 4.5h6"></path>
+          </svg>
+        </button>
+
+        <button class="icon-btn" id="toggleBtn" type="button" title="Показать ключ">
+          <svg id="eyeOpen" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
+            <circle cx="12" cy="12" r="2.5"></circle>
+          </svg>
+        </button>
+      </div>
+      <div class="status" id="status"></div>
+    </section>
+
+    <section class="result-wrap">
+      <div class="empty hidden" id="emptyState">
+        <div class="empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v3M12 18v3M3 12h3M18 12h3"></path>
+            <circle cx="12" cy="12" r="4"></circle>
+          </svg>
+        </div>
+        <strong>Код появится здесь</strong>
+        <span>Таймер запускается только после ввода ключа</span>
+      </div>
+
+      <div class="result active" id="result">
+        <div class="code-row">
+          <div class="code-info">
+            <div class="label">Текущий код</div>
+            <div class="code" id="code" style="color: rgb(17, 17, 17);">007400</div>
+          </div>
+          <button class="copy" id="copyBtn" type="button" title="Скопировать код">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="8" y="8" width="11" height="11" rx="2"></rect>
+              <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="timer-line">
+          <div class="ring" id="ring" style="--ring-color: #111111; --p: 50;"><span id="seconds">15</span></div>
+          <div class="timer-copy">
+            <div class="timer-title" id="timerTitle">Код активен</div>
+            <div class="timer-sub" id="timerSub">До обновления осталось 15 секунд</div>
+            <div class="progress"><i id="bar" style="width: 50%; background: rgb(17, 17, 17);"></i></div>
+          </div>
+        </div>
+
+        <div class="meta">
+          <span class="pill" id="periodPill">30 сек</span>
+          <span class="pill" id="digitsPill">6 цифр</span>
+          <span class="pill" id="algoPill">SHA-1</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"></path>
+        <path d="m9 12 2 2 4-4"></path>
+      </svg>
+      Секрет не отправляется на сервер и не сохраняется автоматически
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast">Код скопирован</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+
+  const secretInput = $('secret');
+  const emptyState = $('emptyState');
+  const result = $('result');
+  const codeEl = $('code');
+  const ring = $('ring');
+  const secondsEl = $('seconds');
+  const timerTitle = $('timerTitle');
+  const timerSub = $('timerSub');
+  const bar = $('bar');
+  const status = $('status');
+  const copyBtn = $('copyBtn');
+  const pasteBtn = $('pasteBtn');
+  const toggleBtn = $('toggleBtn');
+  const toast = $('toast');
+
+  let config = null;
+  let currentCode = '';
+  let lastCounter = null;
+  let tick = null;
+
+  const defaults = { period: 30, digits: 6, algorithm: 'SHA1' };
+
+  function setStatus(text = '', error = false) {
+    status.textContent = text;
+    status.classList.toggle('error', error);
+  }
+
+  function showToast(text) {
+    toast.textContent = text;
+    toast.classList.add('show');
+    clearTimeout(showToast.t);
+    showToast.t = setTimeout(() => toast.classList.remove('show'), 1400);
+  }
+
+  function cleanBase32(s) {
+    return s.replace(/\s+/g, '').replace(/-/g, '').replace(/=+$/g, '').toUpperCase();
+  }
+
+  function parseInput(raw) {
+    raw = raw.trim();
+    if (!raw) return null;
+
+    let cfg = {...defaults, secret: ''};
+
+    if (raw.toLowerCase().startsWith('otpauth://')) {
+      let u;
+      try { u = new URL(raw); }
+      catch { throw new Error('Некорректная otpauth-ссылка'); }
+
+      const secret = u.searchParams.get('secret');
+      if (!secret) throw new Error('В ссылке нет параметра secret');
+
+      cfg.secret = cleanBase32(secret);
+
+      const period = Number(u.searchParams.get('period'));
+      const digits = Number(u.searchParams.get('digits'));
+      const algorithm = (u.searchParams.get('algorithm') || 'SHA1').toUpperCase().replace(/-/g,'');
+
+      if (Number.isFinite(period) && period >= 5 && period <= 300) cfg.period = Math.floor(period);
+      if ([6,7,8].includes(digits)) cfg.digits = digits;
+      if (['SHA1','SHA256','SHA512'].includes(algorithm)) cfg.algorithm = algorithm;
+    } else {
+      cfg.secret = cleanBase32(raw);
+    }
+
+    if (!cfg.secret) throw new Error('Введите секретный ключ');
+    if (!/^[A-Z2-7]+$/.test(cfg.secret)) throw new Error('Ключ должен быть в формате Base32');
+
+    return cfg;
+  }
+
+  function base32ToBytes(base32) {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+    let bits = '';
+    for (const ch of base32) {
+      const v = alphabet.indexOf(ch);
+      if (v < 0) throw new Error('Некорректный Base32-ключ');
+      bits += v.toString(2).padStart(5,'0');
+    }
+    const out = [];
+    for (let i=0;i+8<=bits.length;i+=8) out.push(parseInt(bits.slice(i,i+8),2));
+    if (!out.length) throw new Error('Слишком короткий ключ');
+    return new Uint8Array(out);
+  }
+
+  function counterBytes(counter) {
+    const b = new ArrayBuffer(8);
+    const v = new DataView(b);
+    const high = Math.floor(counter / 0x100000000);
+    const low = counter >>> 0;
+    v.setUint32(0, high, false);
+    v.setUint32(4, low, false);
+    return new Uint8Array(b);
+  }
+
+  async function totp(cfg, counter) {
+    const hashName = {SHA1:'SHA-1', SHA256:'SHA-256', SHA512:'SHA-512'}[cfg.algorithm];
+    const key = await crypto.subtle.importKey(
+      'raw',
+      base32ToBytes(cfg.secret),
+      {name:'HMAC',hash:hashName},
+      false,
+      ['sign']
+    );
+
+    const sig = new Uint8Array(
+      await crypto.subtle.sign('HMAC', key, counterBytes(counter))
+    );
+
+    const offset = sig[sig.length - 1] & 15;
+    const bin =
+      ((sig[offset] & 127) << 24) |
+      ((sig[offset+1] & 255) << 16) |
+      ((sig[offset+2] & 255) << 8) |
+      (sig[offset+3] & 255);
+
+    const mod = 10 ** cfg.digits;
+    return String((bin >>> 0) % mod).padStart(cfg.digits,'0');
+  }
+
+  function urgency(remaining, period) {
+    const ratio = remaining / period;
+    if (remaining <= Math.max(5, period * .16)) return {c:'#ef4444',title:'Скоро обновится'};
+    if (remaining <= Math.max(10, period * .34)) return {c:'#f59e0b',title:'Мало времени'};
+    return {c:'#111111',title:'Код активен'};
+  }
+
+  function resetView() {
+    clearInterval(tick);
+    tick = null;
+    config = null;
+    currentCode = '';
+    lastCounter = null;
+    result.classList.remove('active');
+    emptyState.classList.remove('hidden');
+    setStatus('');
+  }
+
+  function setMeta(cfg) {
+    $('periodPill').textContent = cfg.period + ' сек';
+    $('digitsPill').textContent = cfg.digits + ' цифр';
+    $('algoPill').textContent = cfg.algorithm.replace('SHA','SHA-');
+  }
+
+  async function updateCode(force = false) {
+    if (!config) return;
+
+    const nowSec = Math.floor(Date.now()/1000);
+    const counter = Math.floor(nowSec / config.period);
+    const elapsed = nowSec % config.period;
+    const remaining = config.period - elapsed;
+
+    if (force || counter !== lastCounter) {
+      currentCode = await totp(config, counter);
+      codeEl.textContent = currentCode;
+      lastCounter = counter;
+    }
+
+    const u = urgency(remaining, config.period);
+    const pct = (remaining / config.period) * 100;
+
+    codeEl.style.color = u.c;
+    ring.style.setProperty('--ring-color', u.c);
+    ring.style.setProperty('--p', pct);
+    secondsEl.textContent = remaining;
+    bar.style.width = pct + '%';
+    bar.style.background = u.c;
+    timerTitle.textContent = u.title;
+    timerSub.textContent = 'До обновления осталось ' + remaining + ' ' + pluralSeconds(remaining);
+  }
+
+  function pluralSeconds(n){
+    const n10=n%10,n100=n%100;
+    if(n10===1 && n100!==11) return 'секунда';
+    if(n10>=2 && n10<=4 && !(n100>=12 && n100<=14)) return 'секунды';
+    return 'секунд';
+  }
+
+  async function activate() {
+    clearInterval(tick);
+    tick = null;
+    setStatus('');
+
+    const raw = secretInput.value.trim();
+    if (!raw) {
+      resetView();
+      return;
+    }
+
+    try {
+      config = parseInput(raw);
+      setMeta(config);
+      emptyState.classList.add('hidden');
+      result.classList.add('active');
+      lastCounter = null;
+      await updateCode(true);
+      tick = setInterval(() => updateCode().catch(() => {}), 250);
+    } catch (e) {
+      clearInterval(tick);
+      tick = null;
+      config = null;
+      currentCode = '';
+      result.classList.remove('active');
+      emptyState.classList.remove('hidden');
+      setStatus(e.message || 'Не удалось создать код', true);
+    }
+  }
+
+  secretInput.addEventListener('input', activate);
+
+  pasteBtn.addEventListener('click', async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      secretInput.value = text;
+      await activate();
+      secretInput.focus();
+    } catch {
+      setStatus('Браузер не разрешил чтение буфера обмена', true);
+    }
+  });
+
+  toggleBtn.addEventListener('click', () => {
+    secretInput.type = secretInput.type === 'password' ? 'text' : 'password';
+    toggleBtn.title = secretInput.type === 'password' ? 'Показать ключ' : 'Скрыть ключ';
+  });
+
+  copyBtn.addEventListener('click', async () => {
+    if (!currentCode) return;
+    try {
+      await navigator.clipboard.writeText(currentCode);
+      showToast('Код скопирован');
+    } catch {
+      const r = document.createRange();
+      r.selectNodeContents(codeEl);
+      const s = getSelection();
+      s.removeAllRanges();
+      s.addRange(r);
+      showToast('Код выделен');
+    }
+  });
+
+  resetView();
+})();
+</script>
+
+</body></html>
