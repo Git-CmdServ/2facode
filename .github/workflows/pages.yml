@@ -23,12 +23,29 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
+      - name: Build single-file site
+        run: |
+          mkdir -p _site
+          cat \
+            _pages_parts/part0.html \
+            _pages_parts/part1.html \
+            _pages_parts/part2.html \
+            _pages_parts/part3.html \
+            _pages_parts/part4.html \
+            _pages_parts/part5.html \
+            _pages_parts/part6.html \
+            > _site/index.html
+          cp CNAME _site/CNAME
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
